@@ -10,10 +10,11 @@ type OnIncrement = () => void
 type OnDecrement = () => void
 
 type AmountProps = {
-  children: (amount: any) => React.ReactElement;
+  renderAmountOne: (amount: number) => React.ReactElement;
+  renderAmountTwo: (amount: number) => React.ReactElement;
 }
 
-const Amount: React.FC<AmountProps> = ({children}) => {
+const Amount: React.FC<AmountProps> = ({renderAmountOne, renderAmountTwo}) => {
 	const [amount, setAmount] = useState<number>(0)
 
   const onIncrement = () => {
@@ -28,29 +29,38 @@ const Amount: React.FC<AmountProps> = ({children}) => {
 		<div>
 			<span>US Dollar: {amount} </span>
 
+      {renderAmountTwo(amount)}
+
 			<button type="button" onClick={onIncrement}>
 				+
 			</button>
 			<button type="button" onClick={onDecrement}>
 				-
 			</button>
-      {children(amount)}
+
+      {renderAmountOne(amount)}
 		</div>
 	)
 }
 
 const App: React.FC = () => {
 	return (
-		<div>
-			<Amount>
-				{amount => (
-					<div>
-						<Pound amount={amount} />
-						<Euro amount={amount} />
-					</div>
-				)}
-			</Amount>
-		</div>
+		<Amount
+			renderAmountOne={amount => (
+				<div>
+					<h2>My one Amount</h2>
+					<Pound amount={amount} />
+					<Euro amount={amount} />
+				</div>
+			)}
+			renderAmountTwo={amount => (
+				<div>
+					<h2>My other Amount</h2>
+					<Pound amount={amount} />
+					<Euro amount={amount} />
+				</div>
+			)}
+		/>
 	)
 }
 
