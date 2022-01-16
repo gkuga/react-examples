@@ -15,7 +15,7 @@ type AmountProps = {
 	onDecrement: OnDecrement
 }
 
-const Amount: React.FC<AmountProps> = ({ amount, onIncrement, onDecrement }) => {
+const Amount: React.FC<AmountProps> = ({ children, amount, onIncrement, onDecrement }) => {
 
 	return (
 		<div>
@@ -27,6 +27,7 @@ const Amount: React.FC<AmountProps> = ({ amount, onIncrement, onDecrement }) => 
 			<button type="button" onClick={onDecrement}>
 				-
 			</button>
+      {children}
 		</div>
 	)
 }
@@ -49,10 +50,10 @@ const App: React.FC = () => {
 				amount={amount}
 				onIncrement={onIncrement}
 				onDecrement={onDecrement}
-			/>
-
-			<Euro amount={amount} />
-			<Pound amount={amount} />
+			>
+				<Euro amount={amount} />
+				<Pound amount={amount} />
+			</Amount>
 		</div>
 	)
 }
