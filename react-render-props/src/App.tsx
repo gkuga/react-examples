@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const Amount: React.FC = (props) => {
-	const [amount, setAmount] = useState<number>(0)
+const Euro: React.FC<{amount: number}> = ({amount}) => <p>Euro: {amount * 0.86}</p>
+const Pound: React.FC<{amount: number}> = ({amount}) => <p>Pound: {amount * 0.76}</p>
 
-  const onIncrement = () => {
-    setAmount(amount + 1 )
-  }
 
-  const onDecrement = () => {
-    setAmount(amount - 1 )
-  }
+type OnIncrement = () => void
+type OnDecrement = () => void
 
-	const Euro: React.FC<{amount: number}> = ({amount}) => <p>Euro: {amount * 0.86}</p>
-	const Pound: React.FC<{amount: number}> = ({amount}) => <p>Pound: {amount * 0.76}</p>
+type AmountProps = {
+  amount: number
+	onIncrement: OnIncrement
+	onDecrement: OnDecrement
+}
+
+const Amount: React.FC<AmountProps> = ({ amount, onIncrement, onDecrement }) => {
 
 	return (
 		<div>
@@ -26,12 +27,34 @@ const Amount: React.FC = (props) => {
 			<button type="button" onClick={onDecrement}>
 				-
 			</button>
+		</div>
+	)
+}
+
+const App: React.FC = () => {
+	const [amount, setAmount] = useState<number>(0)
+
+  const onIncrement = () => {
+    setAmount(amount + 1 )
+  }
+
+  const onDecrement = () => {
+    setAmount(amount - 1 )
+  }
+
+
+	return (
+		<div>
+			<Amount
+				amount={amount}
+				onIncrement={onIncrement}
+				onDecrement={onDecrement}
+			/>
+
 			<Euro amount={amount} />
 			<Pound amount={amount} />
 		</div>
 	)
 }
-
-const App = () => <Amount />
 
 export default App
