@@ -27,7 +27,7 @@ interface Position {
 }
 
 // ドラッグ＆ドロップ要素の情報をまとめた型
-interface DnDItem<T> {
+export interface DnDItem<T> {
 	value: T; // useDnDSort()の引数に渡された配列の要素の値
 	key: string; // 要素と紐づいた一意な文字列
 	position: Position; // 要素の座標
@@ -44,7 +44,7 @@ interface DnDRef<T> {
 }
 
 // 返り値の型
-interface DnDSortResult<T> {
+export interface DnDSortResult<T> {
 	key: string;
 	value: T;
 	events: {
@@ -56,18 +56,16 @@ interface DnDSortResult<T> {
 /**
  * @description ドラッグ＆ドロップの並び替え処理を提供します
  */
-export const useDnDSort = <T>(defaultItems: T[]): DnDSortResult<T>[] => {
-	// 描画内容と紐づいているのでuseStateで管理する
-	const [items, setItems] = useState(defaultItems);
+export const useDnDSort = <T>(items: T[], setItems: React.Dispatch<T[]>): DnDSortResult<T>[] => {
 
 	// 状態をrefで管理する
-	const state: DnDRef<T> = {
+	const state: DnDRef<T> = useRef({
 		dndItems: [],
 		keys: new Map(),
 		dragElement: null,
 		canCheckHovered: true,
 		pointerPosition: { x: 0, y: 0 }
-	}
+	}).current
 
 	// ドラッグ中の処理
 	const onMouseMove = (event: MouseEvent) => {
