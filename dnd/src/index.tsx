@@ -77,7 +77,7 @@ const SortSampleApp = () => {
     '/images/pexels-eberhard-grossgasteiger-2088203.jpg',
     '/images/pexels-alexander-ant-5603660.jpg'
   ])
-  const results = useDnDSort(imageList, setImageList)
+  const results = useDnDSort(imageList, (images) => setImageList(images))
   const [url, setURL] = useState<string>('')
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
     if (event.key === 'Enter') {
