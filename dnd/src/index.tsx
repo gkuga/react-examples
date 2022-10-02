@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import { useDnDSort } from './useDnDSort'
-import type { DnDSortResult } from './useDnDSort'
+import type { DnDSorted } from './useDnDSort'
 
 type Style<T extends HTMLElement> = React.HTMLAttributes<T>['style']
 
@@ -54,10 +54,10 @@ const imageStyle: Style<HTMLImageElement> = {
   height: '100%'
 }
 
-const Image = (props: { item: DnDSortResult<string> }) => {
+const Image = (props: { item: DnDSorted<{ key: string, value: string }> }) => {
   return (
     <div style={imageCardStyle} {...props.item.events}>
-      <img src={props.item.value} alt='ソート可能な画像' style={imageStyle} />
+      <img src={props.item.value.value} alt='ソート可能な画像' style={imageStyle} />
     </div>
   )
 }
@@ -66,23 +66,23 @@ const Image = (props: { item: DnDSortResult<string> }) => {
  * @description ドラッグ＆ドロップ並び替えサンプルのコンポーネント
  */
 const SortSampleApp = () => {
-  const [imageList, setImageList] = useState<string[]>([
-    '/images/pexels-matheus-bertelli-1830252.jpg',
-    '/images/pexels-daria-rem-2759658.jpg',
-    '/images/pexels-pixabay-277253.jpg',
-    '/images/pexels-aron-visuals-1743165.jpg',
-    '/images/pexels-ekrulila-3246665.jpg',
-    '/images/pexels-steve-johnson-1690351.jpg',
-    '/images/pexels-eberhard-grossgasteiger-2086361.jpg',
-    '/images/pexels-eberhard-grossgasteiger-2088203.jpg',
-    '/images/pexels-alexander-ant-5603660.jpg'
+  const [imageList, setImageList] = useState([
+    { key: '1', value: '/images/pexels-matheus-bertelli-1830252.jpg' },
+    { key: '2', value: '/images/pexels-daria-rem-2759658.jpg' },
+    { key: '3', value: '/images/pexels-pixabay-277253.jpg' },
+    { key: '4', value: '/images/pexels-aron-visuals-1743165.jpg' },
+    { key: '5', value: '/images/pexels-ekrulila-3246665.jpg' },
+    { key: '6', value: '/images/pexels-steve-johnson-1690351.jpg' },
+    { key: '7', value: '/images/pexels-eberhard-grossgasteiger-2086361.jpg' },
+    { key: '8', value: '/images/pexels-eberhard-grossgasteiger-2088203.jpg' },
+    { key: '9', value: '/images/pexels-alexander-ant-5603660.jpg' }
   ])
-  const results = useDnDSort(imageList, (images) => setImageList(images))
+  const [results, deleteItem] = useDnDSort(imageList, (images) => setImageList(images))
   const [url, setURL] = useState<string>('')
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = event => {
     if (event.key === 'Enter') {
       event.preventDefault()
-      setImageList(p => p.concat([url]))
+      setImageList(p => p.concat([{ key: Math.random().toString(16), value: url }]))
       setURL('')
     }
   }
@@ -101,9 +101,21 @@ const SortSampleApp = () => {
         />
       </div>
       <div style={containerStyle}>
-        {results.map((item) => <Image key={item.key} item={item} />)}
+        {results.map((item) => {
+          return (
+            <div key={item.value.key} style={imageCardStyle} {...item.events}>
+              <button
+                onClick={() => {
+                  setImageList(imageList.filter(image => image.key !== item.value.key))
+                  deleteItem(item.value.key)
+                }}
+              >X</button>
+              <img src={item.value.value} alt='ソート可能な画像' style={imageStyle} />
+            </div>
+          )
+        })}
       </div>
-    </div>
+    </div >
   )
 }
 
