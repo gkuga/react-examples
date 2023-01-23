@@ -1,0 +1,19 @@
+{
+  "name": "scaffdog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "scaffdog": "^2.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+		"serve": "http-server .",
+		"tsc": "tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}
